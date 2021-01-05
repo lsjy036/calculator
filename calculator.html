@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html style="height: 100%;width: 100%;">
+    <style type="text/css">
+    #all{
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background-color: aliceblue;
+    }
+
+    #intxt{
+        height: 50%;
+        width: 90%;
+        border-style: groove;
+        border-width: 2px;
+        border-color: grey;
+        background-color: white;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        font-weight: 600;
+        font-size: 20px;
+    }
+
+    #cen{
+        height: 65%;
+        width: 25%;
+        border-style: solid;
+        border-color: black;
+        border-width: thin;
+        background-color: white;
+    }
+    #showstr{
+        height: 30%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    #number{
+        height: 70%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        background-color: white;
+    }
+
+    </style>
+    <body id = "all">
+        <div id = "cen">
+            <div id="showstr">
+                <p id="intxt"></p>
+            </div>
+            <div id="number">
+                <button style="visibility: hidden;width: 22%;height: 16%;"></button>
+                <button style="visibility: hidden;width: 22%;height: 16%;"></button>
+                <button onclick="pick('%')" style="width: 22%;height: 16%;font-size: 25px;"><b>%</b></button>
+                <button onclick="delsym()" style="width: 22%;height: 16%;font-size: 25px;"><b>AC</b></button>
+                <button onclick="pick('7')" style="width: 22%;height: 16%;font-size: 25px;"><b>7</b></button>
+                <button onclick="pick('8')" style="width: 22%;height: 16%;font-size: 25px;"><b>8</b></button>
+                <button onclick="pick('9')" style="width: 22%;height: 16%;font-size: 25px;"><b>9</b></button>
+                <button onclick="pick('÷')" style="width: 22%;height: 16%;font-size: 25px;"><b>÷</b></button>
+                <button onclick="pick('4')" style="width: 22%;height: 16%;font-size: 25px;"><b>4</b></button>
+                <button onclick="pick('5')" style="width: 22%;height: 16%;font-size: 25px;"><b>5</b></button>
+                <button onclick="pick('6')" style="width: 22%;height: 16%;font-size: 25px;"><b>6</b></button>
+                <button onclick="pick('×')" style="width: 22%;height: 16%;font-size: 25px;"><b>×</b></button>
+                <button onclick="pick('1')" style="width: 22%;height: 16%;font-size: 25px;"><b>1</b></button>
+                <button onclick="pick('2')" style="width: 22%;height: 16%;font-size: 25px;"><b>2</b></button>
+                <button onclick="pick('3')" style="width: 22%;height: 16%;font-size: 25px;"><b>3</b></button>
+                <button onclick="pick('-')" style="width: 22%;height: 16%;font-size: 25px;"><b>-</b></button>
+                <button onclick="pick('0')" style="width: 22%;height: 16%;font-size: 25px;"><b>0</b></button>
+                <button onclick="pick('.')" style="width: 22%;height: 16%;font-size: 25px;"><b>.</b></button>
+                <button onclick="calculator()" style="width: 22%;height: 16%;font-size: 25px;background-color: rgb(42, 113, 245);"><b>=</b></button>
+                <button onclick="pick('+')" style="width: 22%;height: 16%;font-size: 25px;"><b>+</b></button>
+            </div>
+        </div>
+
+        <script>
+            var txt = "";
+            var txt2 = "";
+            var flag = 1;
+            var flag2 = 0;
+            var flag3 = 0;
+            function pick(sym) {
+                if (sym == ".") {
+                    if (flag == 1) {
+                        txt2 += sym;
+                        txt += sym;
+                        document.getElementById("intxt").innerHTML = txt;
+                        flag = 0;
+                    }
+                    else {
+                        document.getElementById("intxt").innerHTML = txt;
+                    }
+                }
+                else if (sym == "+" || sym == "-" || sym == "×" || sym == "÷"){
+                    if(flag2 == 0){
+                        document.getElementById("intxt").innerHTML = txt;
+                    }
+                    else {
+                        flag2 = 0;
+                        flag = 1;
+                        txt2 += sym;
+                        txt += sym;
+                        document.getElementById("intxt").innerHTML = txt;
+                    }
+                }
+                else {
+                    flag2 = 1; 
+                    txt2 += sym;
+                    txt += sym;
+                    document.getElementById("intxt").innerHTML = txt;
+                }
+                flag3 = 1;
+            }
+            function delsym() {
+                txt = "";
+                txt2 = "";
+                document.getElementById("intxt").innerHTML = txt;
+            }
+            function calculator(){
+                var str = txt.match(/[0-9]+%/g);
+                if(str != null){
+                    len = str.length;
+                    for(var i = 0;i < len;i++){
+                        var res = parseInt(str[i]);
+                        res = res * 0.01;
+                        txt = txt.replace(str[i],res);
+                    }
+                }
+                //计算乘除
+                var patt1 = /\d+(\.\d+)?[×|÷]\d+(\.\d+)?/;
+                debugger;
+                str = txt.match(patt1);
+                var res;
+                while (str != null) {
+                    str = str[0];
+                    var a1 = parseFloat(str);
+                    len = a1.toString().length;
+                    var sym = str[len];
+                    var a2 = str.slice(len+1,str.length);
+                    a2 = parseFloat(a2);
+                    switch (sym){
+                        case "×" :
+                            res = (a1 * 10) * (a2* 10) / 100;
+                            break;
+                        case "÷" :
+                            res = (a1 * 10) / (a2 * 10) ;
+                            break;
+                    }
+                    txt = txt.replace(str,res);
+                    str = txt.match(patt1);
+                }
+                //计算加减
+                var patt1 = /[0-9\.]+[+|-]+[0-9\.]+/;
+                str = txt.match(patt1);
+                var res;
+                while (str != null) {
+                    str = str[0];
+                    var a1 = parseFloat(str);
+                    len = a1.toString().length;
+                    var sym = str[len];
+                    var a2 = str.slice(len+1,str.length);
+                    a2 = parseFloat(a2);
+                    switch (sym){
+                        case "+" :
+                            res = ((a1 * 10) + (a2 * 10)) / 10;
+                            break;
+                        case "-" :
+                            res = ((a1 * 10) - (a2 * 10)) / 10;
+                            break;
+                    }
+                    txt = txt.replace(str,res);
+                    str = txt.match(patt1);
+                }
+                if(flag3 == 1){
+                    document.getElementById("intxt").innerHTML = txt2 + "=" + txt;
+                    txt2 = txt ;
+                }
+                else {
+                    document.getElementById("intxt").innerHTML = "";
+                }
+                
+            }
+        </script>
+
+    </body>
+</html>
